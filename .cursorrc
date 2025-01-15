@@ -41,7 +41,17 @@
     "directory": "history",
     "structure": {
       "type": "date",
-      "format": "YYYY/MM/DD.md"
+      "format": "YYYY/MM/DD.md",
+      "useSystemDate": false,
+      "dateSource": {
+        "type": "worldTimeApi",
+        "timezone": "Asia/Seoul",
+        "url": "http://worldtimeapi.org/api/timezone/Asia/Seoul",
+        "fallback": {
+          "type": "system",
+          "timezone": "Asia/Seoul"
+        }
+      }
     },
     "template": {
       "daily": "# {date} 작업 내용\n\n## 오늘의 주요 작업\n\n### 작업 내용\n\n### 특이 사항\n\n### 다음 작업 계획\n",
