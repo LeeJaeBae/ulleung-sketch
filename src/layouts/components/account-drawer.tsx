@@ -28,7 +28,6 @@ import { AnimateBorder } from 'src/components/animate';
 
 import { useMockedUser } from 'src/auth/hooks';
 
-import { UpgradeBlock } from './nav-upgrade';
 import { AccountButton } from './account-button';
 import { SignOutButton } from './sign-out-button';
 
@@ -204,9 +203,7 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
 
           {renderList()}
 
-          <Box sx={{ px: 2.5, py: 3 }}>
-            <UpgradeBlock />
-          </Box>
+          <Box sx={{ px: 2.5, py: 3 }}></Box>
         </Scrollbar>
 
         <Box sx={{ p: 2.5 }}>
