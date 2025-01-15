@@ -8,21 +8,15 @@ import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import TableBody from '@mui/material/TableBody';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
 
 import { paths } from 'src/routes/paths';
 import { useBoolean } from 'src/hooks/use-boolean';
-import { useAuth } from 'src/contexts/auth-context';
-import { auth, type AuthUser } from 'src/lib/supabase/client';
+import { RouterLink } from 'src/routes/components';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
@@ -38,82 +32,59 @@ import {
 } from 'src/components/table';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { UserTableRow } from '../user-table-row';
 import { LoadingScreen } from 'src/components/loading-screen';
+import { ShipTableRow, type Ship } from '../components/ship-table-row';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'email', label: '이메일', width: 220 },
-  { id: 'role', label: '권한', width: 180 },
-  { id: 'created_at', label: '가입일', width: 180 },
+  { id: 'name', label: '선박명', width: 220 },
+  { id: 'type', label: '선박 종류', width: 180 },
+  { id: 'capacity', label: '정원', width: 120 },
+  { id: 'status', label: '상태', width: 100 },
   { id: '', width: 88 },
-];
-
-const ROLE_OPTIONS = [
-  { value: 'all', label: '전체' },
-  { value: 'admin', label: '관리자' },
-  { value: 'user', label: '일반 사용자' },
 ];
 
 // ----------------------------------------------------------------------
 
-export function UserListView() {
-  const { user: currentUser } = useAuth();
-  const [users, setUsers] = useState<AuthUser[]>([]);
+export function ShipListView() {
+  const [ships, setShips] = useState<Ship[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchEmail, setSearchEmail] = useState('');
-  const [selectedRole, setSelectedRole] = useState('all');
+  const [searchName, setSearchName] = useState('');
 
   const table = useTable();
   const confirm = useBoolean();
 
-  const loadUsers = useCallback(async () => {
+  const loadShips = useCallback(async () => {
     try {
-      const loadedUsers = await auth.listUsers();
-      setUsers(loadedUsers);
+      // TODO: API 호출로 선박 목록 불러오기
+      setShips([]);
     } catch (error) {
-      console.error('Error loading users:', error);
-      toast.error('사용자 목록을 불러오는데 실패했습니다.');
+      console.error('Error loading ships:', error);
+      toast.error('선박 목록을 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadUsers();
-  }, [loadUsers]);
-
-  const handleRoleUpdate = useCallback(
-    async (userId: string, newRole: 'admin' | 'user') => {
-      try {
-        await auth.updateUserRole(userId, newRole);
-        toast.success('권한이 변경되었습니다.');
-        loadUsers();
-      } catch (error) {
-        console.error('Error updating role:', error);
-        toast.error('권한 변경에 실패했습니다.');
-      }
-    },
-    [loadUsers]
-  );
+    loadShips();
+  }, [loadShips]);
 
   const handleDeleteRows = useCallback(async () => {
     try {
-      // 선택된 사용자 삭제 로직 구현
-      toast.success('선택한 사용자가 삭제되었습니다.');
-      loadUsers();
+      // TODO: 선택된 선박 삭제 로직 구현
+      toast.success('선택한 선박이 삭제되었습니다.');
+      loadShips();
     } catch (error) {
-      console.error('Error deleting users:', error);
-      toast.error('사용자 삭제에 실패했습니다.');
+      console.error('Error deleting ships:', error);
+      toast.error('선박 삭제에 실패했습니다.');
     }
-  }, [loadUsers]);
+  }, [loadShips]);
 
-  const filteredUsers = users.filter((user) => {
-    const emailMatch = user.email.toLowerCase().includes(searchEmail.toLowerCase());
-    const roleMatch = selectedRole === 'all' || user.role === selectedRole;
-    return emailMatch && roleMatch;
-  });
+  const filteredShips = ships.filter((ship) =>
+    ship.name.toLowerCase().includes(searchName.toLowerCase())
+  );
 
   const renderFilters = (
     <Stack
@@ -125,9 +96,9 @@ export function UserListView() {
       <Stack direction="row" alignItems="center" spacing={2} flexGrow={1}>
         <TextField
           fullWidth
-          value={searchEmail}
-          onChange={(e) => setSearchEmail(e.target.value)}
-          placeholder="이메일로 검색..."
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+          placeholder="선박명으로 검색..."
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -136,20 +107,6 @@ export function UserListView() {
             ),
           }}
         />
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel>권한</InputLabel>
-          <Select
-            value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-            label="권한"
-          >
-            {ROLE_OPTIONS.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
       </Stack>
     </Stack>
   );
@@ -161,7 +118,7 @@ export function UserListView() {
       title="삭제"
       content={
         <>
-          선택한 <strong> {table.selected.length} </strong>명의 사용자를 삭제하시겠습니까?
+          선택한 <strong> {table.selected.length} </strong>척의 선박을 삭제하시겠습니까?
         </>
       }
       action={
@@ -186,12 +143,22 @@ export function UserListView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="사용자 관리"
+        heading="선박 관리"
         links={[
           { name: '대시보드', href: paths.dashboard.root },
-          { name: '사용자', href: paths.dashboard.user.root },
+          { name: '선박', href: paths.dashboard.root },
           { name: '목록' },
         ]}
+        action={
+          <Button
+            component={RouterLink}
+            href={paths.dashboard.root}
+            variant="contained"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+          >
+            새 선박
+          </Button>
+        }
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
@@ -202,11 +169,11 @@ export function UserListView() {
           <TableSelectedAction
             dense={table.dense}
             numSelected={table.selected.length}
-            rowCount={filteredUsers.length}
+            rowCount={filteredShips.length}
             onSelectAllRows={(checked) =>
               table.onSelectAllRows(
                 checked,
-                filteredUsers.map((row) => row.id)
+                filteredShips.map((row) => row.id)
               )
             }
             action={
@@ -225,39 +192,37 @@ export function UserListView() {
                   order={table.order}
                   orderBy={table.orderBy}
                   headCells={TABLE_HEAD}
-                  rowCount={filteredUsers.length}
+                  rowCount={filteredShips.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      filteredUsers.map((row) => row.id)
+                      filteredShips.map((row) => row.id)
                     )
                   }
                 />
 
                 <TableBody>
-                  {filteredUsers.map((row) => (
-                    <UserTableRow
+                  {filteredShips.map((row) => (
+                    <ShipTableRow
                       key={row.id}
                       row={row}
                       selected={table.selected.includes(row.id)}
                       onSelectRow={() => table.onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRows()}
-                      onEditRow={() =>
-                        handleRoleUpdate(row.id, row.role === 'admin' ? 'user' : 'admin')
-                      }
+                      onEditRow={() => {}}
                     />
                   ))}
 
-                  <TableNoData notFound={!filteredUsers.length} />
+                  <TableNoData notFound={!filteredShips.length} />
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
 
           <TablePaginationCustom
-            count={filteredUsers.length}
+            count={filteredShips.length}
             page={table.page}
             rowsPerPage={table.rowsPerPage}
             onPageChange={table.onChangePage}

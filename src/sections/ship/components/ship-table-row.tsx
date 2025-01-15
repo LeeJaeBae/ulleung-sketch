@@ -1,15 +1,11 @@
 'use client';
 
-import type { AuthUser } from 'src/lib/supabase/client';
-
-import { format } from 'date-fns';
-import { ko } from 'date-fns/locale';
-
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
@@ -19,20 +15,42 @@ import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
+export type Ship = {
+  id: string;
+  name: string;
+  type: string;
+  capacity: number;
+  status: 'active' | 'inactive' | 'maintenance';
+};
+
 type Props = {
-  row: AuthUser;
+  row: Ship;
   selected: boolean;
   onSelectRow: VoidFunction;
   onDeleteRow: VoidFunction;
   onEditRow: VoidFunction;
 };
 
-export function UserTableRow({ row, selected, onSelectRow, onDeleteRow, onEditRow }: Props) {
-  const { email, role, created_at } = row;
+export function ShipTableRow({ row, selected, onSelectRow, onDeleteRow, onEditRow }: Props) {
+  const { name, type, capacity, status } = row;
 
   const confirm = useBoolean();
-
   const popover = usePopover();
+
+  const renderStatus = (shipStatus: Ship['status']) => {
+    const statusMap: Record<
+      Ship['status'],
+      { label: string; color: 'success' | 'warning' | 'error' }
+    > = {
+      active: { label: '운항중', color: 'success' },
+      inactive: { label: '정박중', color: 'warning' },
+      maintenance: { label: '정비중', color: 'error' },
+    };
+
+    const { label, color } = statusMap[shipStatus];
+
+    return <Chip label={label} color={color} size="small" />;
+  };
 
   return (
     <>
@@ -41,11 +59,13 @@ export function UserTableRow({ row, selected, onSelectRow, onDeleteRow, onEditRo
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell>{email}</TableCell>
+        <TableCell>{name}</TableCell>
 
-        <TableCell>{role}</TableCell>
+        <TableCell>{type}</TableCell>
 
-        <TableCell>{format(new Date(created_at), 'PPP', { locale: ko })}</TableCell>
+        <TableCell>{capacity}명</TableCell>
+
+        <TableCell>{renderStatus(status)}</TableCell>
 
         <TableCell align="right">
           <IconButton color={popover.open ? 'primary' : 'default'} onClick={popover.onOpen}>
@@ -68,7 +88,7 @@ export function UserTableRow({ row, selected, onSelectRow, onDeleteRow, onEditRo
           }}
         >
           <Iconify icon="solar:pen-bold" />
-          권한 변경
+          수정
         </MenuItem>
 
         <MenuItem
@@ -87,7 +107,7 @@ export function UserTableRow({ row, selected, onSelectRow, onDeleteRow, onEditRo
         open={confirm.value}
         onClose={confirm.onFalse}
         title="삭제"
-        content="이 사용자를 삭제하시겠습니까?"
+        content="이 선박을 삭제하시겠습니까?"
         action={
           <IconButton color="error" onClick={onDeleteRow}>
             삭제

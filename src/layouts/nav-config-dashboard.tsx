@@ -41,6 +41,7 @@ const ICONS = {
   analytics: icon('ic-analytics'),
   dashboard: icon('ic-dashboard'),
   parameter: icon('ic-parameter'),
+  ship: icon('ic-tour'),
 };
 
 // ----------------------------------------------------------------------
@@ -49,6 +50,15 @@ export const navData: NavSectionProps['data'] = [
   {
     subheader: '관리',
     items: [
+      {
+        title: '선박',
+        path: paths.dashboard.ship.root,
+        icon: ICONS.ship,
+        children: [
+          { title: '목록', path: paths.dashboard.ship.list },
+          { title: '등록', path: paths.dashboard.ship.new },
+        ],
+      },
       {
         title: '사용자',
         path: paths.dashboard.user.root,
