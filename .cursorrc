@@ -35,5 +35,27 @@
       "format": "jsdoc",
       "language": "ko"
     }
+  },
+  "history": {
+    "enabled": true,
+    "directory": "history",
+    "structure": {
+      "type": "date",
+      "format": "YYYY/MM/DD.md"
+    },
+    "template": {
+      "daily": "# {date} 작업 내용\n\n## 오늘의 주요 작업\n\n### 작업 내용\n\n### 특이 사항\n\n### 다음 작업 계획\n",
+      "commit": "- [{time}] {type}({scope}): {subject}"
+    },
+    "autoCommit": {
+      "enabled": true,
+      "message": "docs(history): {date} 작업 내용 업데이트"
+    },
+    "reviewProcess": {
+      "enabled": true,
+      "schedule": "daily",
+      "time": "18:00",
+      "notification": true
+    }
   }
 } 
