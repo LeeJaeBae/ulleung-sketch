@@ -1,0 +1,39 @@
+{
+    "name": "your-project-name",
+    "description": "프로젝트 설명",
+    // 패키지 타입 정의
+    "type": "project",
+    
+    // 필수 의존성 패키지 목록
+    "require": {
+        // 데이터베이스 ORM
+        "doctrine/orm": "^2.11",
+        // HTTP 클라이언트
+        "guzzlehttp/guzzle": "^7.0",
+        // 로깅 라이브러리
+        "monolog/monolog": "^2.0"
+    },
+    
+    // 개발 환경에서만 필요한 의존성
+    "require-dev": {
+        // 단위 테스트 프레임워크
+        "phpunit/phpunit": "^9.5",
+        // 코드 스타일 검사 도구
+        "squizlabs/php_codesniffer": "^3.6"
+    },
+    
+    // 오토로드 설정
+    "autoload": {
+        // PSR-4 기반 오토로딩
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    
+    // 테스트 코드 오토로드 설정
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+} 

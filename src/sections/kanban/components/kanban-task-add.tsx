@@ -1,3 +1,14 @@
+/**
+ * @file src/sections/kanban/components/kanban-task-add.tsx
+ * @description 칸반 보드에 새로운 태스크를 추가하는 컴포넌트
+ * @purpose
+ * - 새로운 태스크 생성을 위한 입력 폼 제공
+ * - 태스크 제목, 설명 등의 기본 정보 입력
+ * - 태스크 생성 취소 기능
+ * @related-components
+ * - KanbanColumn: 태스크가 추가될 컬럼
+ */
+
 import type { IKanbanTask } from 'src/types/kanban';
 
 import { uuidv4 } from 'minimal-shared/utils';
@@ -20,6 +31,16 @@ type Props = {
   onCloseAddTask: () => void;
   onAddTask: (task: IKanbanTask) => void;
 };
+
+/**
+ * @component KanbanTaskAdd
+ * @description 새로운 태스크 추가를 위한 입력 폼을 렌더링하는 컴포넌트
+ * @param {Object} props - 컴포넌트 props
+ * @param {string} props.status - 태스크가 추가될 컬럼의 상태
+ * @param {boolean} props.openAddTask - 태스크 추가 폼 표시 여부
+ * @param {Function} props.onAddTask - 태스크 추가 핸들러
+ * @param {Function} props.onCloseAddTask - 태스크 추가 폼 닫기 핸들러
+ */
 
 export function KanbanTaskAdd({ status, openAddTask, onAddTask, onCloseAddTask }: Props) {
   const [taskName, setTaskName] = useState('');

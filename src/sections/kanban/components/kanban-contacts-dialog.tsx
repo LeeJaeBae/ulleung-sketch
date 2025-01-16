@@ -1,3 +1,15 @@
+/**
+ * @file src/sections/kanban/components/kanban-contacts-dialog.tsx
+ * @description 칸반 태스크에 담당자를 할당하기 위한 다이얼로그 컴포넌트
+ * @purpose
+ * - 태스크 담당자 선택 인터페이스 제공
+ * - 사용자 검색 및 필터링 기능
+ * - 다중 담당자 선택 지원
+ * @related-components
+ * - KanbanTaskDetails: 태스크 상세 정보 컴포넌트
+ * - SearchNotFound: 검색 결과 없음 표시
+ */
+
 import type { IKanbanAssignee } from 'src/types/kanban';
 
 import { useState, useCallback } from 'react';
@@ -28,6 +40,17 @@ type Props = {
   onClose: () => void;
   assignee?: IKanbanAssignee[];
 };
+
+/**
+ * @component KanbanContactsDialog
+ * @description 태스크 담당자 선택을 위한 다이얼로그를 렌더링하는 컴포넌트
+ * @param {Object} props - 컴포넌트 props
+ * @param {boolean} props.open - 다이얼로그 표시 여부
+ * @param {Array} props.contacts - 선택 가능한 담당자 목록
+ * @param {Array} props.selected - 현재 선택된 담당자 목록
+ * @param {Function} props.onClose - 다이얼로그 닫기 핸들러
+ * @param {Function} props.onSelect - 담당자 선택 핸들러
+ */
 
 export function KanbanContactsDialog({ assignee = [], open, onClose }: Props) {
   const [searchContact, setSearchContact] = useState('');

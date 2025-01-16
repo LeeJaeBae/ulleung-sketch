@@ -1,3 +1,14 @@
+/**
+ * @file src/sections/kanban/column/kanban-column-add.tsx
+ * @description 새로운 칸반 컬럼을 추가하는 컴포넌트
+ * @purpose
+ * - 새로운 상태(컬럼) 추가 기능 제공
+ * - 컬럼 이름 입력 폼 제공
+ * - 컬럼 생성 취소 기능
+ * @related-components
+ * - KanbanColumn: 생성될 컬럼 컴포넌트
+ */
+
 import type { BoxProps } from '@mui/material/Box';
 
 import { useState, useCallback } from 'react';
@@ -15,6 +26,14 @@ import { createColumn } from 'src/actions/kanban';
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
+
+/**
+ * @component KanbanColumnAdd
+ * @description 새로운 칸반 컬럼 추가 폼을 렌더링하는 컴포넌트
+ * @param {Object} props - 컴포넌트 props
+ * @param {Function} props.onAddColumn - 컬럼 추가 핸들러
+ * @param {SxProps} props.sx - MUI 스타일 props
+ */
 
 export function KanbanColumnAdd({ sx, ...other }: BoxProps) {
   const [columnName, setColumnName] = useState('');

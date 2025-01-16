@@ -1,3 +1,15 @@
+/**
+ * @file src/sections/kanban/details/kanban-details-toolbar.tsx
+ * @description 칸반 태스크 상세 정보의 상단 툴바 컴포넌트
+ * @purpose
+ * - 태스크 상세 정보 페이지의 주요 기능 제공
+ * - 태스크 삭제, 복사 등의 관리 기능
+ * - 태스크 상태 변경 기능
+ * @related-components
+ * - KanbanDetails: 상위 상세 정보 컴포넌트
+ * - CustomPopover: 메뉴 팝오버
+ */
+
 import type { BoxProps } from '@mui/material/Box';
 
 import { useState, useCallback } from 'react';
@@ -26,6 +38,16 @@ type Props = BoxProps & {
   onLikeToggle: () => void;
   onCloseDetails: () => void;
 };
+
+/**
+ * @component KanbanDetailsToolbar
+ * @description 태스크 상세 정보의 상단 툴바를 렌더링하는 컴포넌트
+ * @param {Object} props - 컴포넌트 props
+ * @param {Object} props.task - 태스크 정보
+ * @param {Function} props.onClose - 상세 정보 닫기 핸들러
+ * @param {Function} props.onDelete - 태스크 삭제 핸들러
+ * @param {Function} props.onUpdateTask - 태스크 업데이트 핸들러
+ */
 
 export function KanbanDetailsToolbar({
   sx,

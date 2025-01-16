@@ -1,3 +1,15 @@
+/**
+ * @file src/sections/kanban/column/kanban-column-toolbar.tsx
+ * @description 칸반 컬럼의 상단 툴바 컴포넌트
+ * @purpose
+ * - 컬럼 제목 및 작업 개수 표시
+ * - 컬럼 관리 메뉴 제공 (삭제, 초기화 등)
+ * - 새 작업 추가 기능 제공
+ * @related-components
+ * - KanbanColumn: 상위 컬럼 컴포넌트
+ * - CustomPopover: 메뉴 팝오버
+ */
+
 import type { BoxProps } from '@mui/material/Box';
 
 import { varAlpha } from 'minimal-shared/utils';
@@ -28,6 +40,17 @@ type Props = BoxProps & {
   onToggleAddTask?: () => void;
   onUpdateColumn?: (inputName: string) => void;
 };
+
+/**
+ * @component KanbanColumnToolbar
+ * @description 칸반 컬럼의 상단 툴바를 렌더링하는 컴포넌트
+ * @param {Object} props - 컴포넌트 props
+ * @param {string} props.name - 컬럼 이름
+ * @param {number} props.taskCount - 컬럼 내 작업 개수
+ * @param {Function} props.onDelete - 컬럼 삭제 핸들러
+ * @param {Function} props.onClear - 컬럼 초기화 핸들러
+ * @param {Function} props.onAddTask - 새 작업 추가 핸들러
+ */
 
 export function KanbanColumnToolBar({
   sx,

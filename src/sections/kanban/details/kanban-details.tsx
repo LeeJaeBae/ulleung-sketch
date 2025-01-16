@@ -1,3 +1,17 @@
+/**
+ * @file src/sections/kanban/details/kanban-details.tsx
+ * @description 칸반 태스크의 상세 정보를 표시하는 컴포넌트
+ * @purpose
+ * - 태스크의 모든 상세 정보 표시
+ * - 태스크 정보 수정 기능 제공
+ * - 댓글, 첨부파일, 담당자 등 관리
+ * @related-components
+ * - KanbanDetailsToolbar: 상세 정보 상단 툴바
+ * - KanbanDetailsPriority: 우선순위 관리
+ * - KanbanDetailsCommentList: 댓글 목록
+ * - KanbanDetailsAttachments: 첨부파일 관리
+ */
+
 import type { IKanbanTask } from 'src/types/kanban';
 
 import dayjs from 'dayjs';
@@ -53,6 +67,16 @@ const BlockLabel = styled('span')(({ theme }) => ({
 }));
 
 // ----------------------------------------------------------------------
+
+/**
+ * @component KanbanDetails
+ * @description 태스크의 상세 정보를 렌더링하는 컴포넌트
+ * @param {Object} props - 컴포넌트 props
+ * @param {Object} props.task - 태스크 정보
+ * @param {boolean} props.openDetails - 상세 정보 표시 여부
+ * @param {Function} props.onCloseDetails - 상세 정보 닫기 핸들러
+ * @param {Function} props.onUpdateTask - 태스크 업데이트 핸들러
+ */
 
 type Props = {
   task: IKanbanTask;

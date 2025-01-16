@@ -1,3 +1,15 @@
+/**
+ * @file src/sections/kanban/column/kanban-column.tsx
+ * @description 칸반 보드의 개별 컬럼을 표시하는 컴포넌트
+ * @purpose
+ * - 칸반 보드의 각 상태(컬럼)를 표시
+ * - 컬럼 내 카드 목록 관리
+ * - 드래그 앤 드롭 기능 지원
+ * @related-components
+ * - KanbanColumnToolbar: 컬럼 상단의 툴바
+ * - ColumnBase: 컬럼의 기본 구조
+ */
+
 import type { Theme, SxProps } from '@mui/material/styles';
 import type { AnimateLayoutChanges } from '@dnd-kit/sortable';
 import type { IKanbanTask, IKanbanColumn } from 'src/types/kanban';
@@ -27,6 +39,18 @@ type ColumnProps = {
 
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
+
+/**
+ * @component KanbanColumn
+ * @description 칸반 보드의 개별 컬럼을 렌더링하는 컴포넌트
+ * @param {Object} props - 컴포넌트 props
+ * @param {string} props.name - 컬럼 이름
+ * @param {string} props.color - 컬럼 색상
+ * @param {Array} props.cardIds - 컬럼에 속한 카드 ID 배열
+ * @param {Function} props.onUpdateColumn - 컬럼 업데이트 핸들러
+ * @param {Function} props.onClearColumn - 컬럼 초기화 핸들러
+ * @param {Function} props.onDeleteColumn - 컬럼 삭제 핸들러
+ */
 
 export function KanbanColumn({ children, column, tasks, disabled, sx }: ColumnProps) {
   const openAddTask = useBoolean();

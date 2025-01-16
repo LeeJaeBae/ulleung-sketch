@@ -1,3 +1,15 @@
+/**
+ * @file src/sections/kanban/item/item-base.tsx
+ * @description 칸반 보드의 모든 아이템의 기본 구조를 정의하는 컴포넌트
+ * @purpose
+ * - 아이템의 기본 레이아웃 및 스타일 제공
+ * - 드래그 앤 드롭 기능의 기본 구현
+ * - 아이템 상태에 따른 스타일 관리
+ * @related-components
+ * - KanbanTaskItem: 태스크 아이템 구현
+ * - KanbanColumn: 컬럼 구현
+ */
+
 import type { IKanbanTask } from 'src/types/kanban';
 import type { Transform } from '@dnd-kit/utilities';
 import type { DraggableSyntheticListeners } from '@dnd-kit/core';
@@ -31,6 +43,15 @@ export type ItemBaseProps = React.ComponentProps<typeof ItemRoot> & {
     listeners?: DraggableSyntheticListeners;
   };
 };
+
+/**
+ * @component ItemBase
+ * @description 칸반 아이템의 기본 구조를 렌더링하는 컴포넌트
+ * @param {Object} props - 컴포넌트 props
+ * @param {Object} props.stateProps - 아이템의 상태 관련 props
+ * @param {Object} props.slots - 아이템의 각 영역에 렌더링할 컴포넌트
+ * @param {Object} props.sx - MUI 스타일 props
+ */
 
 const ItemBase = forwardRef<HTMLLIElement, ItemBaseProps>((props, ref) => {
   const { task, open, stateProps, sx, ...other } = props;

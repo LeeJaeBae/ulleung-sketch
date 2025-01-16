@@ -1,3 +1,16 @@
+/**
+ * @file src/sections/kanban/view/kanban-view.tsx
+ * @description 칸반 보드의 메인 뷰 컴포넌트
+ * @purpose
+ * - 전체 칸반 보드 UI 구성 및 관리
+ * - 드래그 앤 드롭 기능의 핵심 로직 구현
+ * - 컬럼과 태스크의 상태 관리
+ * @related-components
+ * - KanbanColumn: 칸반 컬럼 컴포넌트
+ * - KanbanTaskItem: 칸반 태스크 아이템
+ * - KanbanColumnAdd: 새 컬럼 추가
+ */
+
 'use client';
 
 import type {
@@ -50,8 +63,16 @@ import { KanbanDragOverlay } from '../components/kanban-drag-overlay';
 
 // ----------------------------------------------------------------------
 
+/**
+ * @constant PLACEHOLDER_ID
+ * @description 새 컬럼 추가를 위한 플레이스홀더 ID
+ */
 const PLACEHOLDER_ID = 'placeholder';
 
+/**
+ * @constant cssVars
+ * @description 칸반 보드의 기본 스타일 변수
+ */
 const cssVars = {
   '--item-gap': '16px',
   '--item-radius': '12px',
@@ -63,6 +84,14 @@ const cssVars = {
 
 // ----------------------------------------------------------------------
 
+/**
+ * @component KanbanView
+ * @description 칸반 보드의 메인 뷰를 렌더링하는 컴포넌트
+ * @features
+ * - 드래그 앤 드롭을 통한 태스크/컬럼 재정렬
+ * - 컬럼 고정 모드 지원
+ * - 반응형 레이아웃
+ */
 export function KanbanView() {
   const { board, boardLoading, boardEmpty } = useGetBoard();
 
@@ -76,18 +105,28 @@ export function KanbanView() {
 
   const isSortingContainer = activeId != null ? columnIds.includes(activeId) : false;
 
+  /**
+   * @description 드래그 앤 드롭을 위한 센서 설정
+   * - 마우스: 3px 이동 시 활성화
+   * - 터치: 250ms 지연, 5px 허용 오차
+   * - 키보드: 커스텀 좌표 계산기 사용
+   */
   const sensors = useSensors(
     useSensor(MouseSensor, {
-      // Require the mouse to move by 3px pixels before activating
       activationConstraint: { distance: 3 },
     }),
     useSensor(TouchSensor, {
-      // Press delay of 250ms, with tolerance of 5px of movement
       activationConstraint: { delay: 250, tolerance: 5 },
     }),
     useSensor(KeyboardSensor, { coordinateGetter })
   );
 
+  /**
+   * @function collisionDetectionStrategy
+   * @description 드래그 앤 드롭 시 충돌 감지 전략
+   * @param {Object} args - 충돌 감지에 필요한 인자들
+   * @returns {Array} 충돌이 감지된 드롭 영역 목록
+   */
   const collisionDetectionStrategy: CollisionDetection = useCallback(
     (args) => {
       if (activeId && activeId in board.tasks) {
@@ -151,6 +190,12 @@ export function KanbanView() {
     [activeId, board?.tasks]
   );
 
+  /**
+   * @function findColumn
+   * @description 주어진 ID에 해당하는 컬럼을 찾는 함수
+   * @param {UniqueIdentifier} id - 찾을 컬럼/태스크 ID
+   * @returns {string|undefined} 컬럼 ID
+   */
   const findColumn = (id: UniqueIdentifier) => {
     if (id in board.tasks) {
       return id;
@@ -168,14 +213,16 @@ export function KanbanView() {
   }, []);
 
   /**
-   * onDragStart
+   * @function onDragStart
+   * @description 드래그 시작 시 호출되는 핸들러
    */
   const onDragStart = ({ active }: DragStartEvent) => {
     setActiveId(active.id);
   };
 
   /**
-   * onDragOver
+   * @function onDragOver
+   * @description 드래그 중 다른 요소 위에 있을 때 호출되는 핸들러
    */
   const onDragOver = ({ active, over }: DragOverEvent) => {
     const overId = over?.id;
@@ -229,7 +276,8 @@ export function KanbanView() {
   };
 
   /**
-   * onDragEnd
+   * @function onDragEnd
+   * @description 드래그 종료 시 호출되는 핸들러
    */
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (active.id in board.tasks && over?.id) {
@@ -276,14 +324,26 @@ export function KanbanView() {
     setActiveId(null);
   };
 
+  /**
+   * @function renderLoading
+   * @description 로딩 상태 UI를 렌더링
+   */
   const renderLoading = () => (
     <Box sx={{ gap: 'var(--column-gap)', display: 'flex', alignItems: 'flex-start' }}>
       <KanbanColumnSkeleton />
     </Box>
   );
 
+  /**
+   * @function renderEmpty
+   * @description 빈 상태 UI를 렌더링
+   */
   const renderEmpty = () => <EmptyContent filled sx={{ py: 10, maxHeight: { md: 480 } }} />;
 
+  /**
+   * @function renderList
+   * @description 칸반 보드의 메인 컨텐츠를 렌더링
+   */
   const renderList = () => (
     <DndContext
       id="dnd-kanban"
