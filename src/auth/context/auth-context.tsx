@@ -1,9 +1,19 @@
-'use client';
+import type { User } from '@supabase/supabase-js';
 
 import { createContext } from 'react';
 
-import type { AuthContextValue } from '../types';
-
 // ----------------------------------------------------------------------
 
-export const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+export type AuthContextType = {
+  user: User | null;
+  loading: boolean;
+  authenticated: boolean;
+  role: string | null;
+};
+
+export const AuthContext = createContext<AuthContextType>({
+  user: null,
+  loading: true,
+  authenticated: false,
+  role: null,
+});

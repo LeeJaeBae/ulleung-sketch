@@ -48,7 +48,12 @@ type FormValues = FieldValues & {
   facilities: Facility[];
 };
 
-export function FacilityEditor() {
+type Props = {
+  facilities?: Facility[];
+  onFacilitiesChange: (facilities: Facility[]) => void;
+};
+
+export function FacilityEditor({ facilities, onFacilitiesChange }: Props) {
   const { control } = useFormContext<FormValues>();
   const dialog = useBoolean();
 

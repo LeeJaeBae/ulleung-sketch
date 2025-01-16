@@ -1,89 +1,85 @@
 'use client';
 
-import { useSetState } from 'minimal-shared/hooks';
-import { useMemo, useEffect, useCallback } from 'react';
+import type { Session } from '@supabase/supabase-js';
 
-import axios from 'src/lib/axios';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+
 import { supabase } from 'src/lib/supabase';
 
 import { AuthContext } from '../auth-context';
 
-import type { AuthState } from '../../types';
-import { auth } from 'src/lib/supabase/client';
-
 // ----------------------------------------------------------------------
-
-/**
- * NOTE:
- * We only build demo at basic level.
- * Customer will need to do some extra handling yourself if you want to extend the logic and other features...
- */
 
 type Props = {
   children: React.ReactNode;
 };
 
 export function AuthProvider({ children }: Props) {
-  const { state, setState } = useSetState<AuthState>({ user: null, loading: true });
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
-  const checkUserSession = useCallback(async () => {
+  const initialize = useCallback(async () => {
     try {
       const {
-        data: { session },
-        error,
+        data: { session: initialSession },
       } = await supabase.auth.getSession();
+      setSession(initialSession);
 
-      if (error) {
-        setState({ user: null, loading: false });
-        console.error(error);
-        throw error;
+      if (initialSession?.user) {
+        const { data: roleData, error: roleError } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', initialSession.user.id)
+          .single();
+
+        if (roleError) {
+          console.error('Error fetching user role:', roleError);
+        } else {
+          setUserRole(roleData?.role || 'guest');
+        }
       }
 
-      if (session) {
-        const accessToken = session?.access_token;
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+        setSession(currentSession);
 
-        const user = await auth.getCurrentUser();
+        if (currentSession?.user) {
+          const { data: roleData } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', currentSession.user.id)
+            .single();
 
-        setState({ user: { ...session, ...session?.user, ...user }, loading: false });
-        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-      } else {
-        setState({ user: null, loading: false });
-        delete axios.defaults.headers.common.Authorization;
-      }
+          setUserRole(roleData?.role || 'guest');
+        } else {
+          setUserRole(null);
+        }
+      });
+
+      setLoading(false);
+
+      return subscription;
     } catch (error) {
       console.error(error);
-      setState({ user: null, loading: false });
+      setLoading(false);
+      return undefined;
     }
-  }, [setState]);
-
-  useEffect(() => {
-    checkUserSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ----------------------------------------------------------------------
-
-  const checkAuthenticated = state.user ? 'authenticated' : 'unauthenticated';
-
-  const status = state.loading ? 'loading' : checkAuthenticated;
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   const memoizedValue = useMemo(
     () => ({
-      user: state.user
-        ? {
-            ...state.user,
-            id: state.user?.id,
-            accessToken: state.user?.access_token,
-            displayName: `${state.user?.user_metadata.display_name}`,
-            role: state.user?.role ?? 'admin',
-          }
-        : null,
-      checkUserSession,
-      loading: status === 'loading',
-      authenticated: status === 'authenticated',
-      unauthenticated: status === 'unauthenticated',
+      user: session?.user || null,
+      loading,
+      authenticated: !!session,
+      role: userRole,
     }),
-    [checkUserSession, state.user, status]
+    [session, loading, userRole]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

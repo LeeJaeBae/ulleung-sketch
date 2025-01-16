@@ -1,7 +1,9 @@
-import { supabase } from 'src/lib/supabase';
-import type { Ship } from 'src/types/ship';
+import type { Tables } from 'src/types/supabase';
 
-export async function createShip(data: Omit<Ship, 'id' | 'created_at' | 'updated_at'>) {
+import { supabase } from 'src/lib/supabase';
+
+
+export async function createShip(data: Omit<Tables<'ships'>, 'id' | 'created_at' | 'updated_at'>) {
   const { data: ship, error } = await supabase
     .from('ships')
     .insert([data])

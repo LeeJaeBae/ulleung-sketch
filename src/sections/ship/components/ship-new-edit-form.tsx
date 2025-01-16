@@ -55,7 +55,7 @@ const shipSchema = z.object({
   vehicle_support: z.boolean().nullable(),
   company_id: z.string().min(1, '선사는 필수입니다'),
   specifications: z.record(z.string(), z.any()).nullable(),
-  description: z.string().optional(),
+
   facilities: z
     .array(
       z.object({
@@ -182,13 +182,13 @@ export function ShipNewEditForm({ currentShip }: Props) {
                 />
               </Stack>
 
-              <Field.Text
+              {/* <Field.Text
                 name="description"
                 label="선박 설명"
                 multiline
                 rows={4}
                 placeholder="선박에 대한 설명을 입력하세요"
-              />
+              /> */}
 
               <Divider sx={{ my: 2 }} />
 
@@ -266,8 +266,8 @@ export function ShipNewEditForm({ currentShip }: Props) {
                 <Typography variant="h6">편의 시설</Typography>
 
                 <FacilityEditor
-                  value={methods.watch('facilities')}
-                  onChange={(value) => setValue('facilities', value)}
+                  facilities={methods.watch('facilities')}
+                  onFacilitiesChange={(facilities) => setValue('facilities', facilities)}
                 />
               </Stack>
             </Card>

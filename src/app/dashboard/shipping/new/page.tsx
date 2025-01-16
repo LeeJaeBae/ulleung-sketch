@@ -6,7 +6,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { ShippingCompanyNewEditForm } from 'src/sections/shipping-company/shipping-company-new-edit-form';
+import ShippingCompanyNewEditForm from 'src/sections/ship/components/shipping-company-new-edit-form';
 
 // ----------------------------------------------------------------------
 
