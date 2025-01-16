@@ -26,16 +26,15 @@ export type MultiFilePreviewProps = React.ComponentProps<'ul'> & {
   };
 };
 
-export type UploadProps = DropzoneOptions & {
+export interface UploadProps extends Omit<DropzoneOptions, 'onDrop'> {
   error?: boolean;
-  sx?: SxProps<Theme>;
-  className?: string;
+  files?: (File | string)[];
+  disabled?: boolean;
   thumbnail?: boolean;
-  helperText?: React.ReactNode;
   placeholder?: React.ReactNode;
-  value?: FileUploadType | FilesUploadType;
-  onDelete?: () => void;
-  onUpload?: () => void;
-  onRemoveAll?: () => void;
+  onDrop?: <T extends File>(acceptedFiles: T[]) => void;
+  onDelete?: (file: File | string) => void;
   onRemove?: (file: File | string) => void;
-};
+  onUpload?: () => void;
+  helperText?: React.ReactNode;
+}

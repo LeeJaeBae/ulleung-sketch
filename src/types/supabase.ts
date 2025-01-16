@@ -1,4 +1,3 @@
-
 export type Json =
   | string
   | number
@@ -65,32 +64,77 @@ export type Database = {
         }
         Relationships: []
       }
-      admins: {
+      facility_types: {
         Row: {
+          category: string
+          code: string
           created_at: string | null
-          email: string
+          description: string | null
+          display_order: number | null
+          icon: string | null
           id: string
+          is_active: boolean | null
           name: string
-          phone: string
-          role: string
           updated_at: string | null
         }
         Insert: {
+          category: string
+          code: string
           created_at?: string | null
-          email: string
+          description?: string | null
+          display_order?: number | null
+          icon?: string | null
           id?: string
+          is_active?: boolean | null
           name: string
-          phone: string
-          role: string
           updated_at?: string | null
         }
         Update: {
+          category?: string
+          code?: string
           created_at?: string | null
-          email?: string
+          description?: string | null
+          display_order?: number | null
+          icon?: string | null
           id?: string
+          is_active?: boolean | null
           name?: string
-          phone?: string
-          role?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      image_types: {
+        Row: {
+          category: string
+          code: string
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          code: string
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          code?: string
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
           updated_at?: string | null
         }
         Relationships: []
@@ -564,6 +608,161 @@ export type Database = {
         }
         Relationships: []
       }
+      ship_facilities: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          facility_type_id: string
+          id: string
+          is_active: boolean | null
+          location_on_ship: string | null
+          name: string
+          operation_hours: Json | null
+          ship_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          facility_type_id: string
+          id?: string
+          is_active?: boolean | null
+          location_on_ship?: string | null
+          name: string
+          operation_hours?: Json | null
+          ship_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          facility_type_id?: string
+          id?: string
+          is_active?: boolean | null
+          location_on_ship?: string | null
+          name?: string
+          operation_hours?: Json | null
+          ship_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ship_facilities_facility_type_id_fkey"
+            columns: ["facility_type_id"]
+            isOneToOne: false
+            referencedRelation: "facility_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ship_facilities_ship_id_fkey"
+            columns: ["ship_id"]
+            isOneToOne: false
+            referencedRelation: "ships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ship_images: {
+        Row: {
+          caption: string | null
+          created_at: string | null
+          display_order: number | null
+          id: string
+          image_type_id: string
+          image_url: string
+          is_active: boolean | null
+          ship_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          image_type_id: string
+          image_url: string
+          is_active?: boolean | null
+          ship_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          image_type_id?: string
+          image_url?: string
+          is_active?: boolean | null
+          ship_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ship_images_image_type_id_fkey"
+            columns: ["image_type_id"]
+            isOneToOne: false
+            referencedRelation: "image_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ship_images_ship_id_fkey"
+            columns: ["ship_id"]
+            isOneToOne: false
+            referencedRelation: "ships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ship_parking_info: {
+        Row: {
+          capacity: number | null
+          created_at: string | null
+          fees: Json | null
+          height_limit: number | null
+          id: string
+          instructions: string | null
+          is_active: boolean | null
+          parking_deck: string | null
+          ship_id: string
+          updated_at: string | null
+          weight_limit: number | null
+        }
+        Insert: {
+          capacity?: number | null
+          created_at?: string | null
+          fees?: Json | null
+          height_limit?: number | null
+          id?: string
+          instructions?: string | null
+          is_active?: boolean | null
+          parking_deck?: string | null
+          ship_id: string
+          updated_at?: string | null
+          weight_limit?: number | null
+        }
+        Update: {
+          capacity?: number | null
+          created_at?: string | null
+          fees?: Json | null
+          height_limit?: number | null
+          id?: string
+          instructions?: string | null
+          is_active?: boolean | null
+          parking_deck?: string | null
+          ship_id?: string
+          updated_at?: string | null
+          weight_limit?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ship_parking_info_ship_id_fkey"
+            columns: ["ship_id"]
+            isOneToOne: false
+            referencedRelation: "ships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ship_reservations: {
         Row: {
           created_at: string | null
@@ -826,7 +1025,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_schema: {
+        Args: {
+          sql: string
+        }
+        Returns: Json
+      }
+      get_schema_info: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          table_name: string
+          column_name: string
+          data_type: string
+          is_nullable: boolean
+          column_default: string
+          character_maximum_length: number
+          numeric_precision: number
+          numeric_scale: number
+          column_description: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

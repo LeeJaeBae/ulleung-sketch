@@ -1,4 +1,9 @@
+'use client';
+
+import { QueryClientProvider } from '@tanstack/react-query';
+
 import { CONFIG } from 'src/global-config';
+import { queryClient } from 'src/lib/qureyClient';
 import { DashboardLayout } from 'src/layouts/dashboard';
 
 import { AuthGuard } from 'src/auth/guard';
@@ -18,7 +23,9 @@ export default function Layout({ children }: Props) {
   return (
     <AuthGuard>
       <AdminGuard>
-        <DashboardLayout>{children}</DashboardLayout>
+        <QueryClientProvider client={queryClient}>
+          <DashboardLayout>{children}</DashboardLayout>
+        </QueryClientProvider>
       </AdminGuard>
     </AuthGuard>
   );

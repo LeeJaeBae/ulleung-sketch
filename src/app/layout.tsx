@@ -12,7 +12,6 @@ import { detectLanguage } from 'src/locales/server';
 import { themeConfig, ThemeProvider } from 'src/theme';
 import { I18nProvider } from 'src/locales/i18n-provider';
 import { AuthProvider } from 'src/contexts/auth-context';
-import { AuthProvider as SupabaseAuthProvider } from 'src/auth/context/supabase';
 
 import { Snackbar } from 'src/components/snackbar';
 import { ProgressBar } from 'src/components/progress-bar';
@@ -21,6 +20,8 @@ import { detectSettings } from 'src/components/settings/server';
 import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/components/settings';
 
 import { CheckoutProvider } from 'src/sections/checkout/context';
+
+import { AuthProvider as SupabaseAuthProvider } from 'src/auth/context/supabase';
 
 // ----------------------------------------------------------------------
 

@@ -1,20 +1,16 @@
 'use client';
 
-import Container from '@mui/material/Container';
-
 import { paths } from 'src/routes/paths';
 
-import { useSettingsContext } from 'src/components/settings';
-
 import { DashboardContent } from 'src/layouts/dashboard';
+
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import ShippingCompanyNewEditForm from 'src/sections/shipping-company/shipping-company-new-edit-form';
+
+import { ShippingCompanyNewEditForm } from 'src/sections/shipping-company/shipping-company-new-edit-form';
 
 // ----------------------------------------------------------------------
 
 export default function ShippingCompanyCreatePage() {
-  const settings = useSettingsContext();
-
   return (
     <DashboardContent>
       <CustomBreadcrumbs
